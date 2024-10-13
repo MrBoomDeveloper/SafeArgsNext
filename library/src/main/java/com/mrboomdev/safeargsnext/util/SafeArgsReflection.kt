@@ -81,17 +81,17 @@ object SafeArgsReflection {
 				else -> {
 					if(value is CharSequence) {
 						bundle.putCharSequence(field.name, value)
-						return
+						continue
 					}
 
 					if(value is Parcelable) {
 						bundle.putParcelable(field.name, value)
-						return
+						continue
 					}
 
 					if(value is Serializable) {
 						bundle.putSerializable(field.name, value)
-						return
+						continue
 					}
 
 					if(SafeArgs.debug) {

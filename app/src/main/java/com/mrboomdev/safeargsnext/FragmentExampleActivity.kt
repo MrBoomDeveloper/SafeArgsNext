@@ -39,10 +39,18 @@ class FragmentExampleActivity : AppCompatActivity(), SafeArgsActivity<FragmentEx
 					return@apply
 				}
 
-				text = "Name: ${args.name}, age: ${args.age ?: "Unknown"}, address: ${args.address}"
+				text = "Name: ${args.name}, " +
+						"age: ${args.age ?: "Unknown"}, " +
+						"address: ${args.address}, " +
+						"favourite movie: ${args.movies}"
 			}
 		}
 	}
 
-	data class Args(val name: String?, val age: Int?, val address: List<String>)
+	data class Args(
+		val name: String?,
+		val age: Int?,
+		val address: List<String>,
+		val movies: List<Movie>
+	)
 }
