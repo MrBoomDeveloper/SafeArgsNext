@@ -1,4 +1,4 @@
-# Safe Args Next
+# SafeArgsNext
 A type-safe alternative to your boilerplate code.
 
 ## Usage examples
@@ -6,12 +6,13 @@ A type-safe alternative to your boilerplate code.
 ### Use arguments
 ```kotlin
 class MyActivity : AppCompatActivity(), SafeArgsActivity<MyActivity.Args> {
-	
+    
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-        safeArgs?.let { args: Args -> 
-			Toast.makeText(this, "Name: ${args.name}, age: ${args.age}", Toast.DURATION_LONG).show()
-        }
+		safeArgs?.let { args: Args -> Toast.makeText(this, 
+			"Name: ${args.name}, age: ${args.age}", 
+			Toast.DURATION_LONG).show() 
+		}
 	}
     
 	data class Args(val name: String, val age: Int)
@@ -20,10 +21,9 @@ class MyActivity : AppCompatActivity(), SafeArgsActivity<MyActivity.Args> {
 
 ### Put arguments into activity
 ```kotlin
-startActivity(SafeArgsIntent(this, MyActivity::class, MyActivity.Args(
-	name = "MrBoomDev",
-	age = 17
-)))
+startActivity(SafeArgsIntent(this, MyActivity::class, 
+	MyActivity.Args(name = "MrBoomDev", age = 17)
+))
 ```
 
 ### Put arguments into fragment
