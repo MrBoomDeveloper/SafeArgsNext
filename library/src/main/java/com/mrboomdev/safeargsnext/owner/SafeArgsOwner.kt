@@ -1,4 +1,4 @@
-package com.mrboomdev.safeargsnext.library
+package com.mrboomdev.safeargsnext.owner
 
 import android.os.Build
 import java.lang.reflect.ParameterizedType

@@ -1,6 +1,5 @@
 package com.mrboomdev.safeargsnext
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -8,21 +7,28 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mrboomdev.safeargsnext.library.SafeArgsActivity
+import com.mrboomdev.safeargsnext.owner.SafeArgsActivity
 
-class MainActivity : AppCompatActivity(), SafeArgsActivity<Args> {
+class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		showSafeArgs()
+		createUi()
+	}
+
+	private fun showSafeArgs() {
 		safeArgs?.let {
 			Toast.makeText(this, "Safe args were received!"
-				+ " Name: ${it.name}"
-				+ ", Age: ${it.age}", Toast.LENGTH_SHORT).show()
+					+ " Name: ${it.name}"
+					+ ", Age: ${it.age}", Toast.LENGTH_SHORT).show()
 		} ?: run {
 			Toast.makeText(this, "No args were passed to this activity!", Toast.LENGTH_SHORT).show()
 		}
+	}
 
+	private fun createUi() {
 		setContentView(LinearLayout(this).also { linear ->
 			linear.orientation = LinearLayout.VERTICAL
 
@@ -45,14 +51,12 @@ class MainActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 				linear.addView(this)
 
 				setOnClickListener {
-					startActivity(Intent(context, MainActivity::class.java).apply {
-						putExtra("name", nameEditText.text)
-
-						ageEditText.text.let setAge@{
-							if(it == null || it.isBlank()) return@setAge
-							putExtra("age", Integer.valueOf(it.toString()))
-						}
-					})
+					startActivity(SafeArgsIntent(context, MainExampleActivity::class, Args(
+						nameEditText.text.toString(),
+						ageEditText.text.let {
+							if(it == null || it.isBlank()) return@let null
+							return@let Integer.valueOf(it.toString())
+						})))
 
 					finish()
 				}
@@ -63,14 +67,12 @@ class MainActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 				linear.addView(this)
 
 				setOnClickListener {
-					startActivity(Intent(context, FragmentExampleActivity::class.java).apply {
-						putExtra("name", nameEditText.text)
-
-						ageEditText.text.let setAge@{
-							if(it == null || it.isBlank()) return@setAge
-							putExtra("age", Integer.valueOf(it.toString()))
-						}
-					})
+					startActivity(SafeArgsIntent(context, FragmentExampleActivity::class, FragmentExampleActivity.Args(
+						nameEditText.text.toString(),
+						ageEditText.text.let {
+							if(it == null || it.isBlank()) return@let null
+							return@let Integer.valueOf(it.toString())
+						}, listOf("Earth", "USA", "Los-Angeles"))))
 				}
 			}
 		})

@@ -8,9 +8,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
-import com.mrboomdev.safeargsnext.library.SafeArgsFragment
+import com.mrboomdev.safeargsnext.owner.SafeArgsActivity
+import com.mrboomdev.safeargsnext.owner.SafeArgsFragment
+import com.mrboomdev.safeargsnext.util.add
 
-class FragmentExampleActivity : AppCompatActivity() {
+class FragmentExampleActivity : AppCompatActivity(), SafeArgsActivity<FragmentExampleActivity.Args> {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -18,7 +20,7 @@ class FragmentExampleActivity : AppCompatActivity() {
 			id = View.generateViewId()
 			supportFragmentManager.beginTransaction()
 				.setReorderingAllowed(true)
-				.add(id, ExampleFragment::class.java, intent.extras, "MyFragment")
+				.add(id, ExampleFragment::class, safeArgs, "MyFragment")
 				.commit()
 		})
 	}
@@ -37,10 +39,10 @@ class FragmentExampleActivity : AppCompatActivity() {
 					return@apply
 				}
 
-				text = "Name: ${args.name}, age: ${args.age}"
+				text = "Name: ${args.name}, age: ${args.age ?: "Unknown"}, address: ${args.address}"
 			}
 		}
 	}
 
-	data class Args(val name: String?, val age: Int?)
+	data class Args(val name: String?, val age: Int?, val address: List<String>)
 }

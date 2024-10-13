@@ -1,10 +1,11 @@
-package com.mrboomdev.safeargsnext.library
+package com.mrboomdev.safeargsnext.owner
 
 import android.os.Bundle
+import com.mrboomdev.safeargsnext.util.SafeArgsReflection
 
 interface SafeArgsFragment<T>: SafeArgsOwner<T> {
 	override val safeArgs: T?
-		get() = SafeArgsCreator.createSafeArgs(getSafeArgsType(), getArguments())
+		get() = SafeArgsReflection.restoreSafeArgs(getSafeArgsType(), getArguments())
 
 	override val safeArgsOwnerTypeName: String
 		get() = SafeArgsFragment::class.qualifiedName!!
