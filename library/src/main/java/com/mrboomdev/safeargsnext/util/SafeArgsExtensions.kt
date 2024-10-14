@@ -20,7 +20,7 @@ fun <A> FragmentTransaction.add(
 ): FragmentTransaction {
 	return add(id, clazz as Class<out Fragment>,
 		if(args != null) Bundle().apply {
-			SafeArgsReflection.fillWithSafeArgs(this, args as Any)
+			SafeArgsReflection.writeSafeArgs(this, args as Any)
 		} else null, tag)
 }
 
@@ -41,7 +41,7 @@ fun <A> FragmentTransaction.add(
 ): FragmentTransaction {
 	return add(clazz as Class<out Fragment>,
 		if(args != null) Bundle().apply {
-			SafeArgsReflection.fillWithSafeArgs(this, args as Any)
+			SafeArgsReflection.writeSafeArgs(this, args as Any)
 		} else null, tag)
 }
 
@@ -62,7 +62,7 @@ fun <A> FragmentTransaction.replace(
 ): FragmentTransaction {
 	return replace(id, clazz as Class<out Fragment>,
 		if(args != null) Bundle().apply {
-			SafeArgsReflection.fillWithSafeArgs(this, args as Any)
+			SafeArgsReflection.writeSafeArgs(this, args as Any)
 		} else null, tag)
 }
 
@@ -82,25 +82,25 @@ fun Intent.putSafeArgs(safeArgs: Any) {
 }
 
 fun Bundle.putSafeArgs(safeArgs: Any) {
-	SafeArgsReflection.fillWithSafeArgs(this, safeArgs)
+	SafeArgsReflection.writeSafeArgs(this, safeArgs)
 }
 
 inline fun <reified T> Bundle.asSafeArgs(): T? {
-	return SafeArgsReflection.restoreSafeArgs(T::class.java, this)
+	return SafeArgsReflection.readSafeArgs(this, T::class.java)
 }
 
 inline fun <reified T> Intent.asSafeArgs(): T? {
-	return SafeArgsReflection.restoreSafeArgs(T::class.java, extras)
+	return SafeArgsReflection.readSafeArgs(extras, T::class.java)
 }
 
 inline fun <reified T> Activity.getSafeArgs(): T? {
-	return SafeArgsReflection.restoreSafeArgs(T::class.java, intent.extras)
+	return SafeArgsReflection.readSafeArgs(intent.extras, T::class.java)
 }
 
 inline fun <reified T> Fragment.getSafeArgs(): T? {
-	return SafeArgsReflection.restoreSafeArgs(T::class.java, arguments)
+	return SafeArgsReflection.readSafeArgs(arguments, T::class.java)
 }
 
 inline fun <reified T> OldFragment.getSafeArgs(): T? {
-	return SafeArgsReflection.restoreSafeArgs(T::class.java, arguments)
+	return SafeArgsReflection.readSafeArgs(arguments, T::class.java)
 }

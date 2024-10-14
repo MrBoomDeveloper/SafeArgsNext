@@ -72,7 +72,7 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 						ageEditText.text.let {
 							if(it == null || it.isBlank()) return@let null
 							return@let Integer.valueOf(it.toString())
-						}, listOf("Earth", "USA", "Los-Angeles"), listOf(
+						}, listOf("Earth", "USA", "Los-Angeles"), CustomList(
 							Movie().apply {
 								name = "The Lego Movie"
 							},

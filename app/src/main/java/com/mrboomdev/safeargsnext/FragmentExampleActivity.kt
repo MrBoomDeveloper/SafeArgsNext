@@ -42,7 +42,7 @@ class FragmentExampleActivity : AppCompatActivity(), SafeArgsActivity<FragmentEx
 				text = "Name: ${args.name}, " +
 						"age: ${args.age ?: "Unknown"}, " +
 						"address: ${args.address}, " +
-						"favourite movie: ${args.movies}"
+						"favourite movies: ${args.movies}"
 			}
 		}
 	}
@@ -51,6 +51,6 @@ class FragmentExampleActivity : AppCompatActivity(), SafeArgsActivity<FragmentEx
 		val name: String?,
 		val age: Int?,
 		val address: List<String>,
-		val movies: List<Movie>
+		val movies: CustomList<Movie>
 	)
 }

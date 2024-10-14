@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.Log
 import com.mrboomdev.safeargsnext.SafeArgs
 import java.io.Serializable
+import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 object SafeArgsReflection {
@@ -24,7 +25,7 @@ object SafeArgsReflection {
 	}
 
 	@Suppress("UNCHECKED_CAST", "DEPRECATION")
-	fun <T> restoreSafeArgs(clazz: Class<T>, bundle: Bundle?): T? {
+	fun <T> readSafeArgs(bundle: Bundle?, clazz: Class<T>): T? {
 		if(bundle == null) {
 			return null
 		}
@@ -38,7 +39,9 @@ object SafeArgsReflection {
 				clazz.getDeclaredField(key).apply {
 					isAccessible = true
 
-					if(type == String::class.java && value !is String && value is CharSequence) {
+					if(value is SerializableValueWrapper) {
+						set(instance, value.value)
+					} else if(type == String::class.java && value !is String && value is CharSequence) {
 						set(instance, value.toString())
 					} else {
 						set(instance, value)
@@ -50,11 +53,43 @@ object SafeArgsReflection {
 		return instance
 	}
 
+	/**
+	 * Special behaviour is required to keep types the same.
+	 */
+	private fun wrapIfRequired(bundle: Bundle, field: Field, value: Any): Boolean {
+		if(value !is Serializable && value !is Parcelable) {
+			return false
+		}
+
+		if(value is Map<*, *> && field.type != Map::class.java) {
+			bundle.putParcelable(field.name, SerializableValueWrapper(value))
+			return true
+		}
+
+		if(value is List<*> && (
+					field.type != List::class.java ||
+					field.type != Collection::class.java ||
+					field.type != Iterable::class.java
+		)) {
+			bundle.putParcelable(field.name, SerializableValueWrapper(value))
+			return true
+		}
+
+		if(value is Array<*> && field.type != Array<Serializable>::class.java) {
+			bundle.putParcelable(field.name, SerializableValueWrapper(value))
+			return true
+		}
+
+		return false
+	}
+
 	@Suppress("UNCHECKED_CAST")
-	fun fillWithSafeArgs(bundle: Bundle, safeArgs: Any) {
+	fun writeSafeArgs(bundle: Bundle, safeArgs: Any) {
 		for(field in safeArgs.javaClass.declaredFields) {
 			field.isAccessible = true
+
 			val value = field.get(safeArgs) ?: continue
+			if(wrapIfRequired(bundle, field, value)) continue
 
 			when(value::class) {
 				String::class -> bundle.putString(field.name, value as String)

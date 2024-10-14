@@ -5,7 +5,7 @@ import com.mrboomdev.safeargsnext.util.SafeArgsReflection
 
 interface SafeArgsActivity<T>: SafeArgsOwner<T> {
 	override val safeArgs: T?
-		get() = SafeArgsReflection.restoreSafeArgs(getSafeArgsType(), getIntent().extras)
+		get() = SafeArgsReflection.readSafeArgs(getIntent().extras, getSafeArgsType())
 
 	override val safeArgsOwnerTypeName: String
 		get() = SafeArgsActivity::class.qualifiedName!!
