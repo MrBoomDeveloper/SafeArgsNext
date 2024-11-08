@@ -34,6 +34,7 @@ android {
 dependencies {
 	api(libs.androidx.core.ktx)
 	api(libs.androidx.appcompat)
+	api(libs.androidx.fragment.ktx)
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)

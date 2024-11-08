@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.mrboomdev.safeargsnext.util
 
 import android.app.Activity
@@ -9,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.mrboomdev.safeargsnext.owner.SafeArgsFragment
 import kotlin.reflect.KClass
-import android.app.Fragment as OldFragment
 
 @Suppress("UNCHECKED_CAST")
 fun <A> FragmentTransaction.add(
@@ -98,9 +95,5 @@ inline fun <reified T> Activity.getSafeArgs(): T? {
 }
 
 inline fun <reified T> Fragment.getSafeArgs(): T? {
-	return SafeArgsReflection.readSafeArgs(arguments, T::class.java)
-}
-
-inline fun <reified T> OldFragment.getSafeArgs(): T? {
 	return SafeArgsReflection.readSafeArgs(arguments, T::class.java)
 }

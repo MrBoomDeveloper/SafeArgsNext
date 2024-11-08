@@ -4,6 +4,7 @@ import android.content.Intent
 import com.mrboomdev.safeargsnext.util.SafeArgsReflection
 
 interface SafeArgsActivity<T>: SafeArgsOwner<T> {
+
 	override val safeArgs: T?
 		get() = SafeArgsReflection.readSafeArgs(getIntent().extras, getSafeArgsType())
 

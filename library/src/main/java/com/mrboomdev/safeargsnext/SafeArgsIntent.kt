@@ -18,7 +18,7 @@ class SafeArgsIntent<A>: Intent {
 		clazz: Class<out SafeArgsOwner<A>>,
 		args: A
 	): super(context, clazz) {
-		setArgs(args)
+		putSafeArgs(args as Any)
 	}
 
 	constructor(
@@ -31,10 +31,6 @@ class SafeArgsIntent<A>: Intent {
 		clazz: KClass<out SafeArgsOwner<A>>,
 		args: A
 	): super(context, clazz.java) {
-		setArgs(args)
-	}
-
-	fun setArgs(args: A) {
 		putSafeArgs(args as Any)
 	}
 }
