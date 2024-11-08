@@ -1,7 +1,7 @@
 package com.mrboomdev.safeargsnext.owner
 
+import android.app.Service
 import android.content.Intent
-import android.os.IBinder
 import com.mrboomdev.safeargsnext.util.SafeArgsReflection
 import java.util.WeakHashMap
 
@@ -16,14 +16,13 @@ interface SafeArgsService<T>: SafeArgsOwner<T> {
 	override val safeArgsOwnerTypeName: String
 		get() = SafeArgsService::class.qualifiedName!!
 
-	fun onBind(intent: Intent?): IBinder? {
-		val value = if(intent != null) {
-			SafeArgsReflection.readSafeArgs(intent.extras, getSafeArgsType())
-		} else null
-
-		weakMap[this] = value
-		return onBind(value)
+	fun onStartCommand(args: T?, flags: Int, startId: Int): Int {
+		return Service.START_STICKY
 	}
 
-	fun onBind(args: T?): IBinder?
+	fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+		val value = SafeArgsReflection.readSafeArgs(intent.extras, getSafeArgsType())
+		weakMap[this] = value
+		return onStartCommand(value, flags, startId)
+	}
 }

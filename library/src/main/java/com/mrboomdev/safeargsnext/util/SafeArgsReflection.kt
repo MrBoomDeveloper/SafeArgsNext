@@ -3,22 +3,24 @@ package com.mrboomdev.safeargsnext.util
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.RestrictTo
 import com.mrboomdev.safeargsnext.SafeArgs
 import java.io.Serializable
 import java.lang.reflect.Field
-import java.lang.reflect.Method
+import kotlin.contracts.ExperimentalContracts
 
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 object SafeArgsReflection {
 
 	// The irony of the fact that an SafeArgsCreator is using Unsafe
-	private val unsafe: Any by lazy {
-		(Class.forName("sun.misc.Unsafe") as Class<*>)
+	private val unsafe by lazy {
+		return@lazy (Class.forName("sun.misc.Unsafe") as Class<*>)
 			.getDeclaredField("theUnsafe")
 			.apply { isAccessible = true }
 			.get(null)
 	}
 
-	private val allocateInstanceMethod: Method by lazy {
+	private val allocateInstanceMethod by lazy {
 		unsafe.javaClass.getDeclaredMethod("allocateInstance", Class::class.java).apply {
 			isAccessible = true
 		}

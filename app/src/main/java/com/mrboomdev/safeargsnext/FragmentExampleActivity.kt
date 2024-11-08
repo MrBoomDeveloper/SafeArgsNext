@@ -1,5 +1,6 @@
 package com.mrboomdev.safeargsnext
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,8 @@ class FragmentExampleActivity : AppCompatActivity(), SafeArgsActivity<FragmentEx
 	}
 
 	class ExampleFragment: Fragment(), SafeArgsFragment<Args> {
+
+		@SuppressLint("SetTextI18n")
 		override fun onCreateView(
 			inflater: LayoutInflater,
 			container: ViewGroup?,
