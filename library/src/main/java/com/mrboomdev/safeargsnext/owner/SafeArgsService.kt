@@ -3,26 +3,22 @@ package com.mrboomdev.safeargsnext.owner
 import android.app.Service
 import android.content.Intent
 import com.mrboomdev.safeargsnext.util.SafeArgsReflection
-import java.util.WeakHashMap
 
-private val weakMap = WeakHashMap<SafeArgsService<*>, Any>()
+abstract class SafeArgsService<T>: Service(), SafeArgsOwner<T> {
+	private var cachedSafeArgs: T? = null
 
-interface SafeArgsService<T>: SafeArgsOwner<T> {
-
-	@Suppress("UNCHECKED_CAST")
 	override val safeArgs: T?
-		get() = weakMap[this] as? T
+		get() = cachedSafeArgs
 
 	override val safeArgsOwnerTypeName: String
 		get() = SafeArgsService::class.qualifiedName!!
 
-	fun onStartCommand(args: T?, flags: Int, startId: Int): Int {
-		return Service.START_STICKY
+	open fun onStartCommand(args: T?, flags: Int, startId: Int): Int {
+		return START_STICKY
 	}
 
-	fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-		val value = SafeArgsReflection.readSafeArgs(intent.extras, getSafeArgsType())
-		weakMap[this] = value
-		return onStartCommand(value, flags, startId)
+	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+		cachedSafeArgs = SafeArgsReflection.readSafeArgs(intent.extras, getSafeArgsType())
+		return onStartCommand(cachedSafeArgs, flags, startId)
 	}
 }
