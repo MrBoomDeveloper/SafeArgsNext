@@ -7,7 +7,6 @@ import androidx.annotation.RestrictTo
 import com.mrboomdev.safeargsnext.SafeArgs
 import java.io.Serializable
 import java.lang.reflect.Field
-import kotlin.contracts.ExperimentalContracts
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 object SafeArgsReflection {
@@ -70,8 +69,7 @@ object SafeArgsReflection {
 
 		if(value is List<*> && (
 					field.type != List::class.java ||
-					field.type != Collection::class.java ||
-					field.type != Iterable::class.java
+					field.type != Collection::class.java
 		)) {
 			bundle.putParcelable(field.name, SerializableValueWrapper(value))
 			return true
@@ -89,8 +87,13 @@ object SafeArgsReflection {
 	fun writeSafeArgs(bundle: Bundle, safeArgs: Any) {
 		for(field in safeArgs.javaClass.declaredFields) {
 			field.isAccessible = true
+			val value = field.get(safeArgs)
 
-			val value = field.get(safeArgs) ?: continue
+			if(value == null) {
+				bundle.remove(field.name)
+				continue
+			}
+
 			if(wrapIfRequired(bundle, field, value)) continue
 
 			when(value::class) {

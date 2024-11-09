@@ -2,13 +2,15 @@ package com.mrboomdev.safeargsnext.util
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.RestrictTo
 import java.io.Serializable
 
 /**
  * This class is supposed to be used by the library to pack classes,
  * which are having a different type after serialization made by the framework.
  */
-internal class SerializableValueWrapper : Parcelable {
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+class SerializableValueWrapper : Parcelable {
 	private val serializable: Serializable?
 	private val parcelable: Parcelable?
 
