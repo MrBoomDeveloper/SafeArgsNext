@@ -25,5 +25,9 @@
             android:name=".FragmentExampleActivity"
             android:exported="false" />
 
+        <service
+            android:name=".SampleService"
+            android:exported="false" />
+
     </application>
 </manifest>

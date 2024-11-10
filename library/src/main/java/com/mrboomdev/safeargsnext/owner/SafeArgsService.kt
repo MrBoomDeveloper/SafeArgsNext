@@ -10,6 +10,9 @@ abstract class SafeArgsService<T>: Service(), SafeArgsOwner<T> {
 	override val safeArgs: T?
 		get() = cachedSafeArgs
 
+	override val safeArgsIsInterface: Boolean
+		get() = false
+
 	override val safeArgsOwnerTypeName: String
 		get() = SafeArgsService::class.qualifiedName!!
 

@@ -13,7 +13,6 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
 		showSafeArgs()
 		createUi()
 	}
@@ -46,9 +45,8 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 				linear.addView(this)
 			}
 
-			Button(this).apply {
+			linear.addView(Button(this).apply {
 				text = "Start activity with these args"
-				linear.addView(this)
 
 				setOnClickListener {
 					startActivity(SafeArgsIntent(context, MainExampleActivity::class, Args(
@@ -60,11 +58,10 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 
 					finish()
 				}
-			}
+			})
 
-			Button(this).apply {
+			linear.addView(Button(this).apply {
 				text = "Start fragment with these args"
-				linear.addView(this)
 
 				setOnClickListener {
 					startActivity(SafeArgsIntent(context, FragmentExampleActivity::class, FragmentExampleActivity.Args(
@@ -81,7 +78,17 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 								name = "A Minecraft Movie"
 							}))))
 				}
-			}
+			})
+
+			linear.addView(Button(this).apply {
+				text = "Start service with these args"
+
+				setOnClickListener {
+					startService(SafeArgsIntent(context, SampleService::class, SampleService.Args(
+						nameEditText.text.toString()
+					)))
+				}
+			})
 		})
 	}
 }

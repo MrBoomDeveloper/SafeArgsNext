@@ -12,6 +12,9 @@ interface SafeArgsActivity<T>: SafeArgsOwner<T> {
 	override val safeArgsOwnerTypeName: String
 		get() = SafeArgsActivity::class.qualifiedName!!
 
+	override val safeArgsIsInterface: Boolean
+		get() = true
+
 	fun putSafeArgs(args: T) {
 		setIntent(getIntent().apply {
 			this.putSafeArgs(args as Any)

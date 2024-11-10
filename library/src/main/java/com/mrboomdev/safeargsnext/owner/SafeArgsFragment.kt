@@ -12,10 +12,13 @@ interface SafeArgsFragment<T>: SafeArgsOwner<T> {
 	override val safeArgsOwnerTypeName: String
 		get() = SafeArgsFragment::class.qualifiedName!!
 
+	override val safeArgsIsInterface: Boolean
+		get() = true
+
 	fun putSafeArgs(args: T?) {
-		setArguments(Bundle().apply {
+		setArguments(Bundle().also {
 			if(args != null) {
-				this.putSafeArgs(args as Any)
+				it.putSafeArgs(args as Any)
 			}
 		})
 	}

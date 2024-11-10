@@ -6,10 +6,11 @@ import java.lang.reflect.Type
 
 interface SafeArgsOwner<T> {
 	val safeArgsOwnerTypeName: String
+	val safeArgsIsInterface: Boolean
 	val safeArgs: T?
 
 	private fun getArgType(clazz: Class<*>): Type? {
-		return clazz.genericInterfaces.find {
+		return if(safeArgsIsInterface) clazz.genericInterfaces.find {
 			if(it !is ParameterizedType) {
 				// We can't get args type without knowing generic types.
 				return@find false
@@ -20,6 +21,19 @@ interface SafeArgsOwner<T> {
 			} else {
 				it.toString().startsWith("$safeArgsOwnerTypeName<")
 			}
+		} else clazz.genericSuperclass?.let {
+			if(it !is ParameterizedType) {
+				// We can't get args type without knowing generic types.
+				return null
+			}
+
+			val matches = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+				it.typeName.startsWith("$safeArgsOwnerTypeName<")
+			} else {
+				it.toString().startsWith("$safeArgsOwnerTypeName<")
+			}
+
+			return if(matches) it else null
 		}
 	}
 
