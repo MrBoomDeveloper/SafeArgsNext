@@ -20,8 +20,11 @@ abstract class SafeArgsService<T>: Service(), SafeArgsOwner<T> {
 		return START_STICKY
 	}
 
-	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-		cachedSafeArgs = SafeArgsReflection.readSafeArgs(intent.extras, getSafeArgsType())
+	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+		cachedSafeArgs = intent?.extras?.let {
+			SafeArgsReflection.readSafeArgs(it, getSafeArgsType())
+		}
+
 		return onStartCommand(cachedSafeArgs, flags, startId)
 	}
 }
