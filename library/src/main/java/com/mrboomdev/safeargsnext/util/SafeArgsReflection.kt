@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import androidx.annotation.RestrictTo
-import com.mrboomdev.safeargsnext.SafeArgs
 import java.io.Serializable
 import java.lang.reflect.Field
 
@@ -25,6 +24,7 @@ object SafeArgsReflection {
 		}
 	}
 
+	@RestrictTo(RestrictTo.Scope.LIBRARY)
 	@Suppress("UNCHECKED_CAST", "DEPRECATION")
 	fun <T> readSafeArgs(bundle: Bundle?, clazz: Class<T>): T? {
 		if(bundle == null) {
@@ -84,6 +84,7 @@ object SafeArgsReflection {
 	}
 
 	@Suppress("UNCHECKED_CAST")
+	@RestrictTo(RestrictTo.Scope.LIBRARY)
 	fun writeSafeArgs(bundle: Bundle, safeArgs: Any) {
 		for(field in safeArgs.javaClass.declaredFields) {
 			field.isAccessible = true
@@ -134,9 +135,7 @@ object SafeArgsReflection {
 						continue
 					}
 
-					if(SafeArgs.debug) {
-						Log.e(SafeArgs.TAG, "Unsupported type: ${value::class.java.name}")
-					}
+					Log.e("SafeArgsReflection", "Unsupported type: ${value::class.java.name}")
 				}
 			}
 		}
