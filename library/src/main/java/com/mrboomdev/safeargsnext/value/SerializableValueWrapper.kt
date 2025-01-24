@@ -1,4 +1,4 @@
-package com.mrboomdev.safeargsnext.util
+package com.mrboomdev.safeargsnext.value
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -15,9 +15,7 @@ class SerializableValueWrapper : Parcelable {
 	private val parcelable: Parcelable?
 
 	val value: Any
-		get() {
-			return (serializable ?: parcelable)!!
-		}
+		get() = (serializable ?: parcelable)!!
 
 	constructor(value: Any) {
 		when(value) {
@@ -55,17 +53,10 @@ class SerializableValueWrapper : Parcelable {
 		parcel.writeSerializable(serializable)
 	}
 
-	override fun describeContents(): Int {
-		return 0
-	}
+	override fun describeContents() = 0
 
 	companion object CREATOR : Parcelable.Creator<SerializableValueWrapper> {
-		override fun createFromParcel(parcel: Parcel): SerializableValueWrapper {
-			return SerializableValueWrapper(parcel)
-		}
-
-		override fun newArray(size: Int): Array<SerializableValueWrapper?> {
-			return arrayOfNulls(size)
-		}
+		override fun createFromParcel(parcel: Parcel) = SerializableValueWrapper(parcel)
+		override fun newArray(size: Int) = arrayOfNulls<SerializableValueWrapper>(size)
 	}
 }

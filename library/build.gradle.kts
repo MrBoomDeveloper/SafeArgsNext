@@ -40,7 +40,8 @@ android {
 }
 
 dependencies {
-	implementation(libs.androidx.fragment.ktx)
+	implementation(libs.kotlinx.serialization.json)
+	compileOnly(libs.androidx.fragment.ktx)
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)

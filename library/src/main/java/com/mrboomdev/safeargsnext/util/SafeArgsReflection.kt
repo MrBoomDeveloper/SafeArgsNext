@@ -2,8 +2,11 @@ package com.mrboomdev.safeargsnext.util
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.annotation.RestrictTo
+import com.mrboomdev.safeargsnext.value.JsonValueWrapper
+import com.mrboomdev.safeargsnext.value.SerializableValueWrapper
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import java.io.Serializable
 import java.lang.reflect.Field
 
@@ -42,6 +45,8 @@ object SafeArgsReflection {
 
 					if(value is SerializableValueWrapper) {
 						set(instance, value.value)
+					} else if(value is JsonValueWrapper) {
+						set(instance, Json.decodeFromString(Json.serializersModule.serializer(value.clazz), value.json))
 					} else if(type == String::class.java && value !is String && value is CharSequence) {
 						set(instance, value.toString())
 					} else {
@@ -135,7 +140,18 @@ object SafeArgsReflection {
 						continue
 					}
 
-					Log.e("SafeArgsReflection", "Unsupported type: ${value::class.java.name}")
+					try {
+						val json = Json.encodeToString(Json.serializersModule.serializer(field.declaringClass), value)
+						bundle.putParcelable(field.name, JsonValueWrapper(field.declaringClass, json))
+						continue
+					} catch(_: Throwable) {}
+					
+					if(value is Function<*>) {
+						throw UnsupportedOperationException("Function isn't serializable! " +
+								"Please, use com.mrboomdev.safeargsnext.value.serializableFunction to fix the problem.")
+					}
+
+					throw UnsupportedOperationException("Unsupported type: ${value::class.java.name}")
 				}
 			}
 		}

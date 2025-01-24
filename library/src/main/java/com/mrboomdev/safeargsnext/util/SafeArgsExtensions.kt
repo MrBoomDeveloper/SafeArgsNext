@@ -56,10 +56,12 @@ fun <A> FragmentTransaction.replace(
 	tag: String? = null
 ) = replace(id, clazz.java, args, tag)
 
-fun Intent.putSafeArgs(safeArgs: Any) {
+fun Intent.putSafeArgs(safeArgs: Any): Intent {
 	putExtras(Bundle().apply {
 		putSafeArgs(safeArgs)
 	})
+	
+	return this
 }
 
 fun Bundle.putSafeArgs(safeArgs: Any) {

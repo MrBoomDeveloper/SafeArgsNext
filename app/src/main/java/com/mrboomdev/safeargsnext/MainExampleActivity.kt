@@ -8,9 +8,11 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.mrboomdev.safeargsnext.owner.SafeArgsActivity
+import com.mrboomdev.safeargsnext.value.serializableFunction
 
 class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
-
+	val name = "Senior MainExampleActivity"
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		showSafeArgs()
@@ -19,6 +21,8 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 
 	private fun showSafeArgs() {
 		safeArgs?.let {
+			it.function?.invoke()
+			
 			Toast.makeText(this, "Safe args were received!"
 					+ " Name: ${it.name}"
 					+ ", Age: ${it.age}", Toast.LENGTH_SHORT).show()
@@ -54,7 +58,7 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 						ageEditText.text.let {
 							if(it == null || it.isBlank()) return@let null
 							return@let Integer.valueOf(it.toString())
-						})))
+						}, serializableFunction { -> println("Came from an \"Start activity with these args\" button.") })))
 
 					finish()
 				}
@@ -93,4 +97,4 @@ class MainExampleActivity : AppCompatActivity(), SafeArgsActivity<Args> {
 	}
 }
 
-data class Args(val name: String?, val age: Int?)
+data class Args(val name: String?, val age: Int?, val function: (() -> Unit)? = null)
